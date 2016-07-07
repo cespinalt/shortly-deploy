@@ -3,6 +3,12 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
+      // dist: {
+      //   src: [
+      //       './*.js', // All files we want to concatenate
+      //   ],
+      //   dest: './dist/',
+      // }
     },
 
     mochaTest: {
@@ -21,12 +27,14 @@ module.exports = function(grunt) {
     },
 
     uglify: {
+      build: {
+       src: './*/*.js',
+       dest: './minified.js'
+      }
     },
 
     eslint: {
-      target: [
-        // Add list of files to lint here
-      ]
+      target: ['app/**/*.js', 'lib/*.js', 'public/**/*.js', 'views/*.js', '/*.js']
     },
 
     cssmin: {
@@ -40,6 +48,8 @@ module.exports = function(grunt) {
           'public/lib/**/*.js',
         ],
         tasks: [
+          'eslint',
+          'mochaTest',
           'concat',
           'uglify'
         ]
@@ -88,7 +98,8 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('deploy', [
+  grunt.registerTask('deploy', [ 'eslint', 'mochaTest'
+  // 'uglify'
       // add your production server task here
   ]);
 
